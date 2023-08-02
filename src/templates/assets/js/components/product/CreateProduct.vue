@@ -189,16 +189,16 @@ export default {
         product_variant: this.product_variant,
         product_variant_prices: this.product_variant_prices
       }
-
+        console.log(product)
       function getCookie(name) {
           const value = `; ${document.cookie}`;
           const parts = value.split(`; ${name}=`);
           if (parts.length === 2) return parts.pop().split(';').shift();
       }
       const csrftoken = getCookie('csrftoken');
-
+      console.log("csrftoken")
       axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
-      axios.post('/product/save/', product).then(response => {
+      axios.post('/product/create/', product).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.log(error);

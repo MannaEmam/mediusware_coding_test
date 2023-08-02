@@ -1,6 +1,4 @@
 from django.urls import path
-from django.views.generic import TemplateView
-
 from .views.product import CreateProductView, ProductView
 from .views.variant import VariantView, VariantCreateView, VariantEditView
 

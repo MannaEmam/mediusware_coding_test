@@ -8,7 +8,7 @@ django = "*"
 django-dotenv = "*"
 django-extensions = "*"
 djangorestframework = "*"
-django-cors-headers = "*"
+django-multiform-views = "*"
 
 [dev-packages]
 
