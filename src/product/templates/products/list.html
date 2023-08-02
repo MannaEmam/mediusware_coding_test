@@ -18,7 +18,15 @@
             <div class="col-md-2">
                 <select name="variant" id="" class="form-control">
                     <option selected disabled>--Select A Variant--</option>
-
+                    {% for variant in variants %}
+                        <optgroup label="{{ variant.title }}">
+                            {% for prod_variant in variant.productvariant_set.all|dictsort:'variant_title' %}
+                                {% ifchanged %}
+                                    <option class="dropdown-item" value="{{ prod_variant.variant_title }}">{{ prod_variant.variant_title }}</option>
+                                {% endifchanged %}
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
                 </select>
             </div>
 

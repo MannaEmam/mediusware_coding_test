@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from .views.product import CreateProductView, SaveProductView, ProductView
+from .views.product import CreateProductView, ProductView
 from .views.variant import VariantView, VariantCreateView, VariantEditView
 
 app_name = "product"
