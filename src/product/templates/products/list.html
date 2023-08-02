@@ -55,74 +55,84 @@
                 </thead>
 
                 <tbody>
+                {% for product in product_list %}
                 <tr>
-                    <td>1</td>
-                    <td>T-Shirt <br> Created at : 25-Aug-2020</td>
-                    <td>Quality product in low cost</td>
-                    <td>
-                        <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.title }}<br> Created at : {{ product.created_at }}</td>
+                    <td>{{ product.description }}</td>
+                        <td>
+                            {% if product.productvariantprice_set.exists %}
+                            <dl class="row mb-0" id="variant-{{ product.id }}" style="height: 80px; overflow: hidden">
+                                {% for variant in product.productvariantprice_set.all %}
                                 <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Full
+                                    {% if variant.product_variant_one %}
+                                    {{ variant.product_variant_one.variant_title }}/
+                                    {% endif %}
+                                    {% if variant.product_variant_two %}
+                                    {{ variant.product_variant_two.variant_title }}/
+                                    {% endif %}
+                                    {% if variant.product_variant_three %}
+                                    {{ variant.product_variant_three.variant_title }}
+                                    {% endif %}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                        <dd class="col-sm-4 pb-0">Price: {{ variant.price }}</dd>
+                                        <dd class="col-sm-8 pb-0">InStock: {{ variant.stock }}</dd>
                                     </dl>
                                 </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Full
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
+                                {% endfor %}
                             </dl>
-                        <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
-                        </button>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a href="" class="btn btn-success">Edit</a>
-                        </div>
-                    </td>
-                </tr>
+                            <button class="btn btn-sm btn-link btn-toggle-variant" data-product-id="{{ product.id }}">Show more</button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="" class="btn btn-success">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
-
             </table>
         </div>
-
     </div>
 
-    <div class="card-footer">
-        <div class="row justify-content-between">
-            <div class="col-md-6">
-                <p>Showing 1 to 10 out of 100</p>
-            </div>
-            <div class="col-md-2">
-
+<div class="card-footer">
+    <div class="row justify-content-between">
+        <div class="col-md-6">
+            <p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ paginator.count }}</p>
+        </div>
+        <div class="text-right">
+            <div class="pagination">
+                <div class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                    <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}" class="page-link">&lt;</a>
+                </div>
+                {% for page_number in page_obj.paginator.page_range %}
+                    <div class="page-item {% if page_number == page_obj.number %}active{% endif %}">
+                        <a href="?page={{ page_number }}" class="page-link">
+                            {{ page_number }}
+                        </a>
+                    </div>
+                {% endfor %}
+                <div class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                    <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}" class="page-link">&gt;</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.btn-toggle-variant').on('click', function() {
+            const productId = $(this).data('product-id');
+            $(`#variant-${productId}`).toggleClass('h-auto');
+        });
+    });
+</script>
+
 {% endblock %}
+

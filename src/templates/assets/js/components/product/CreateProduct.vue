@@ -178,6 +178,7 @@ export default {
       return ans;
     },
 
+
     // store product into database
     saveProduct() {
       let product = {
@@ -189,8 +190,15 @@ export default {
         product_variant_prices: this.product_variant_prices
       }
 
+      function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+      const csrftoken = getCookie('csrftoken');
 
-      axios.post('/product', product).then(response => {
+      axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
+      axios.post('/product/save/', product).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.log(error);
